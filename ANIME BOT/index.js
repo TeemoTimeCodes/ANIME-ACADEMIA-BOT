@@ -6,6 +6,16 @@ const prefix = '-'
 
 const token = 'ODA5ODQ1MTM0NzE1MjU2ODMz.YCbBDg.XLe1gJEZc3j-MbRORlMVihsaln8'
 
+client.commands = new Discord.Collection();
+
+const fs = require('fs');
+
+const commandFiles = fs.readdirSync('./Commands/').filter(file => file.endsWith('.js'))
+for (const file of commandFiles) {
+    const command = require(`./Commands/${file}`);
+
+    client.commands.set(command.name, command);
+}
 
 client.on('ready', ()=> {
     console.log('Time to get watching!')
@@ -36,18 +46,7 @@ client.on('message', message =>{
 message.channel.send(MHAS5Embed);
     }
     else if(command == 'aotfinalseason'){
-        const AOTS4Embed = new Discord.MessageEmbed()
-	.setColor('#0099ff')
-	.setTitle('Attack On Titan: The Final Season')
-	.setURL('https://www.crunchyroll.com/en-gb/attack-on-titan')
-	.setDescription('The final season of the anime that defined a generation.')
-	.setThumbnail('https://img1.ak.crunchyroll.com/i/spire3/1ce8ca573ac440e55f9482f42eac5a251608611536_full.jpg')
-	.addFields(
-		{ name: 'Current Status', value: 'Mid-Season Break: 16/? episodes.' },
-        { name: 'Where to watch:', value: 'Crunchyroll and Funimation both have the latest episodes!'},
-        { name: 'When is the next episode?', value: 'Episode 76: Judgement will air Winter 2022!'}
-	)
-message.channel.send(AOTS4Embed);
+        client.commands.get('AOT').execute(message, args);
     }
     else if (command == 'onepiece'){
         const onepieceEmbed = new Discord.MessageEmbed()
